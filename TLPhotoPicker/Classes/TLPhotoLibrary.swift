@@ -122,9 +122,17 @@ extension TLPhotoLibrary {
         guard let phAssetCollection = collection?.phAssetCollection else { return nil }
         return PHAsset.fetchAssets(in: phAssetCollection, options: getOption())
     }
-    
-    func fetchCollection(allowedVideo: Bool = true, useCameraButton: Bool = true, mediaType: PHAssetMediaType? = nil) {
+    func fetchCollection(){
+        
+    }
+//    func fetchCollection(allowedVideo: Bool = true, useCameraButton: Bool = true, mediaType: PHAssetMediaType? = nil) {
+//
+//    }
+    func fetchCollection(configure:TLPhotosPickerConfigure) {
         let options = getOption()
+        let allowedVideo = configure.allowedVideo
+        let useCameraButton = configure.usedCameraButton
+        let mediaType = configure.mediaType
         
         @discardableResult
         func getSmartAlbum(subType: PHAssetCollectionSubtype, result: inout [TLAssetsCollection]) -> TLAssetsCollection? {
@@ -149,21 +157,29 @@ extension TLPhotoLibrary {
         DispatchQueue.global(qos: .userInteractive).async { [weak self] _ in
             var assetCollections = [TLAssetsCollection]()
             //Camera Roll
-            let camerarollCollection = getSmartAlbum(subType: .smartAlbumUserLibrary, result: &assetCollections)
-            if var cameraRoll = camerarollCollection {
-                cameraRoll.useCameraButton = useCameraButton
-                assetCollections[0] = cameraRoll
-                DispatchQueue.main.async {
-                    self?.delegate?.focusCollection(collection: cameraRoll)
-                    self?.delegate?.loadCameraRollCollection(collection: cameraRoll)
+            if(configure.allowCameraRoll){
+                let camerarollCollection = getSmartAlbum(subType: .smartAlbumUserLibrary, result: &assetCollections)
+                if var cameraRoll = camerarollCollection {
+                    cameraRoll.useCameraButton = useCameraButton
+                    assetCollections[0] = cameraRoll
+                    DispatchQueue.main.async {
+                        self?.delegate?.focusCollection(collection: cameraRoll)
+                        self?.delegate?.loadCameraRollCollection(collection: cameraRoll)
+                    }
                 }
             }
             //Selfies
-            getSmartAlbum(subType: .smartAlbumSelfPortraits, result: &assetCollections)
+            if(configure.allowSelfies){
+                getSmartAlbum(subType: .smartAlbumSelfPortraits, result: &assetCollections)
+            }
             //Panoramas
-            getSmartAlbum(subType: .smartAlbumPanoramas, result: &assetCollections)
+            if(configure.allowPanoramas){
+                getSmartAlbum(subType: .smartAlbumPanoramas, result: &assetCollections)
+            }
             //Favorites
-            getSmartAlbum(subType: .smartAlbumFavorites, result: &assetCollections)
+            if(configure.allowFavorites){
+                getSmartAlbum(subType: .smartAlbumFavorites, result: &assetCollections)
+            }
             if allowedVideo {
                 //Videos
                 getSmartAlbum(subType: .smartAlbumVideos, result: &assetCollections)

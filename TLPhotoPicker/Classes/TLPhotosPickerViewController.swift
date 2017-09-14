@@ -33,6 +33,10 @@ public struct TLPhotosPickerConfigure {
     public var usedCameraButton = true
     public var usedPrefetch = false
     public var allowedLivePhotos = true
+    public var allowCameraRoll = true
+    public var allowSelfies = true
+    public var allowPanoramas = true
+    public var allowFavorites = true
     public var allowedVideo = true
     public var mediaType: PHAssetMediaType? = nil
     public var numberOfColumn = 3
@@ -262,7 +266,7 @@ extension TLPhotosPickerViewController {
     fileprivate func initPhotoLibrary() {
         if PHPhotoLibrary.authorizationStatus() == .authorized {
             self.photoLibrary.delegate = self
-            self.photoLibrary.fetchCollection(allowedVideo: self.allowedVideo, useCameraButton: self.usedCameraButton, mediaType: self.configure.mediaType)
+            self.photoLibrary.fetchCollection(configure: self.configure)
         }else{
             //self.dismiss(animated: true, completion: nil)
         }
