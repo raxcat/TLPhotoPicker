@@ -10,9 +10,9 @@ import Foundation
 import Photos
 
 protocol TLPhotoLibraryDelegate: class {
-    func loadCameraRollCollection(collection: TLAssetsCollection)
-    func loadCompleteAllCollection(collections: [TLAssetsCollection])
-    func focusCollection(collection: TLAssetsCollection)
+    func focus(collection: TLAssetsCollection)
+    func load(collection: TLAssetsCollection)
+    func allCollectionsLoaded(collections: [TLAssetsCollection])
 }
 
 class TLPhotoLibrary {
@@ -162,10 +162,6 @@ extension TLPhotoLibrary {
                 if var cameraRoll = camerarollCollection {
                     cameraRoll.useCameraButton = useCameraButton
                     assetCollections[0] = cameraRoll
-                    DispatchQueue.main.async {
-                        self?.delegate?.focusCollection(collection: cameraRoll)
-                        self?.delegate?.loadCameraRollCollection(collection: cameraRoll)
-                    }
                 }
             }
             //Selfies
@@ -196,7 +192,11 @@ extension TLPhotoLibrary {
             })
             
             DispatchQueue.main.async {
-                self?.delegate?.loadCompleteAllCollection(collections: assetCollections)
+                if let firstCollection =  assetCollections.first {
+                    self?.delegate?.focus(collection: firstCollection)
+                    self?.delegate?.load(collection: firstCollection)
+                }
+                self?.delegate?.allCollectionsLoaded(collections: assetCollections)
             }
         }
     }

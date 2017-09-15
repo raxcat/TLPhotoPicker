@@ -394,9 +394,9 @@ extension TLPhotosPickerViewController {
 
 // MARK: - TLPhotoLibraryDelegate
 extension TLPhotosPickerViewController: TLPhotoLibraryDelegate {
-    func loadCameraRollCollection(collection: TLAssetsCollection) {
+    func load(collection: TLAssetsCollection) {
         if let focused = self.focusedCollection, focused == collection {
-            focusCollection(collection: collection)
+            focus(collection: collection)
         }
         self.collections = [collection]
         self.indicator.stopAnimating()
@@ -404,13 +404,13 @@ extension TLPhotosPickerViewController: TLPhotoLibraryDelegate {
         self.reloadTableView()
     }
     
-    func loadCompleteAllCollection(collections: [TLAssetsCollection]) {
+    func allCollectionsLoaded(collections: [TLAssetsCollection]) {
         self.collections = collections
         self.reloadTableView()
         self.registerChangeObserver()
     }
     
-    func focusCollection(collection: TLAssetsCollection) {
+    func focus(collection: TLAssetsCollection) {
         self.focusedCollection = collection
         self.updateTitle()
     }
