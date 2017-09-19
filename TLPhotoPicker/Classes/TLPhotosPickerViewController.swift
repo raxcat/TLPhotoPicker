@@ -619,6 +619,14 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             }
         }else {
         //select
+            let max = self.configure.maxSelectedAssets
+            if(max==1){ //if max is equal to 1, we reset every cell if a user made any selection
+                for each in self.collectionView.visibleCells{
+                    (each as? TLPhotoCollectionViewCell)?.selectedAsset = false
+                }
+                self.selectedAssets.removeAll()
+            }
+            
             guard !maxCheck() else { return }
             asset.selectedOrder = self.selectedAssets.count + 1
             self.selectedAssets.append(asset)
