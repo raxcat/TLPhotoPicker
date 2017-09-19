@@ -16,6 +16,10 @@ public protocol TLPhotosPickerViewControllerDelegate: class {
     func dismissComplete()
     func photoPickerDidCancel()
     func didExceedMaximumNumberOfSelection(picker: TLPhotosPickerViewController)
+    
+    
+    //Selection notify. Everytime when a photo is selected by user, this delegate will be called once.
+    func userDidSelect(asset:PHAsset)
 }
 extension TLPhotosPickerViewControllerDelegate {
     public func dismissPhotoPicker(withPHAssets: [PHAsset]) { }
@@ -615,6 +619,14 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             }
         }else {
         //select
+            let max = self.configure.maxSelectedAssets
+            if(max==1){ //if max is equal to 1, we reset every cell if a user made any selection
+                for each in self.collectionView.visibleCells{
+                    (each as? TLPhotoCollectionViewCell)?.selectedAsset = false
+                }
+                self.selectedAssets.removeAll()
+            }
+            
             guard !maxCheck() else { return }
             asset.selectedOrder = self.selectedAssets.count + 1
             self.selectedAssets.append(asset)
@@ -623,6 +635,9 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             cell.orderLabel?.text = "\(asset.selectedOrder)"
             if asset.type != .photo {
                 playVideo(asset: asset, indexPath: indexPath)
+            }
+            if let p = asset.phAsset {
+                delegate?.userDidSelect(asset: p)
             }
         }
     }
