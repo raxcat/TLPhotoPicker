@@ -42,6 +42,7 @@ public struct TLPhotosPickerConfigure {
     public var allowPanoramas = true
     public var allowFavorites = true
     public var allowedVideo = true
+    public var previewVideos = true
     public var mediaType: PHAssetMediaType? = nil
     public var numberOfColumn = 3
     public var maxSelectedAssets: Int? = nil
@@ -500,6 +501,10 @@ extension TLPhotosPickerViewController: PHLivePhotoViewDelegate {
     }
     
     fileprivate func playVideo(asset: TLPHAsset, indexPath: IndexPath) {
+        guard self.configure.previewVideos else {
+            print("Skip previewing videos due to configure `previewVideos` to false")
+            return
+        }
         stopPlay()
         guard self.allowedVideo || self.allowedLivePhotos else { return }
         guard let phAsset = asset.phAsset else { return }
