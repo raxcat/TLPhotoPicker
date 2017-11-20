@@ -11,6 +11,10 @@ import TLPhotoPicker
 import Photos
 
 class ViewController: UIViewController,TLPhotosPickerViewControllerDelegate {
+    func userDidSelect(asset: PHAsset) {
+        
+    }
+    
     
     var selectedAssets = [TLPHAsset]()
 
