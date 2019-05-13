@@ -154,7 +154,7 @@ extension TLPhotoLibrary {
             options.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.image.rawValue)
         }
         
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] _ in
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             var assetCollections = [TLAssetsCollection]()
             //Camera Roll
             if(configure.allowCameraRoll){

@@ -72,7 +72,7 @@ open class TLAlbumPopView: UIView,PopupViewProtocol {
         self.tableView.register(UINib(nibName: "TLCollectionTableViewCell", bundle: Bundle(for: TLCollectionTableViewCell.self)), forCellReuseIdentifier: "TLCollectionTableViewCell")
     }
     
-    func tapBgView() {
+    @objc func tapBgView() {
         self.show(false)
     }
 }
