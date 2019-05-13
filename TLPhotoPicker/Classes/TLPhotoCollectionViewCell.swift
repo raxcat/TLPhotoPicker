@@ -24,7 +24,7 @@ open class TLPlayerView: UIView {
     }
     
     // Override UIView property
-    override open static var layerClass: AnyClass {
+    override public static var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
 }
@@ -72,7 +72,7 @@ open class TLPhotoCollectionViewCell: UICollectionViewCell {
                 observer = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: nil, using: { [weak self] (_) in
                     DispatchQueue.main.async {
                         guard let `self` = self else { return }
-                        self.player?.seek(to: kCMTimeZero)
+                        self.player?.seek(to: CMTime.zero)
                         self.player?.play()
                     }
                 })
@@ -129,7 +129,7 @@ open class TLPhotoCollectionViewCell: UICollectionViewCell {
     
     override open func awakeFromNib() {
         super.awakeFromNib()
-        self.playerView?.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        self.playerView?.playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.livePhotoView?.isHidden = true
         self.durationView?.isHidden = true
         self.selectedView?.isHidden = true
